@@ -1,24 +1,22 @@
-const express = require('express');
+const path = require('path');
 
+
+const express = require('express');
 const bodyParser = require('body-parser');
 
 const app = express();
 
+const adminRoutes = require('./routes/admin.js');
+const shopRoutes = require('./routes/shop.js');
+
 app.use(bodyParser.urlencoded({ extended: false }));
 
-app.use('/add-product', (req, res, next) => {
-    res.send(`<form action="/product" method="POST"><input type="text" name="title"><button type="submit">ADD-PRODUCT</button></form>`);
-});
+app.use('/admin', adminRoutes);
+app.use(shopRoutes);
 
-app.post('/product', (req, res, next) => {
-    console.log(req.body);
-    res.redirect('/');
-});
-
-app.use('/', (req, res, next) => {
-    res.send("<h1>I love pokemons</h1>")
+app.use((req, res, next) => {
+    res.status(404).sendFile(path.join(__dirname, 'views', '404.html'));
 })
 
 app.listen(3000);
-
 
