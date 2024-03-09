@@ -5,6 +5,10 @@ const express = require('express');
 const bodyParser = require('body-parser');
 
 const app = express();
+//set a global configuration value
+app.set('view engine', 'pug');
+//this tells where to find these templates
+app.set('views', 'views');
 
 const adminData = require('./routes/admin.js');
 const shopRoutes = require('./routes/shop.js');

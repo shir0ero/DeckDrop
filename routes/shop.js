@@ -10,8 +10,7 @@ const router = express.Router();
 
 router.get('/', (req, res, next) => {
     // res.send("<h1>I love pokemons</h1>")
-    console.log(adminData.products);
-    res.sendFile(path.join(rootDir, 'views', 'shop.html'));
+    res.render('shop.pug');
 });
 //well __dirname will point to the routes folder(where are we using it)
 //but views is a sibling folder
