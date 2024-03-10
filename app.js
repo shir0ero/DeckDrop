@@ -3,17 +3,17 @@ const path = require('path');
 
 const express = require('express');
 const bodyParser = require('body-parser');
-const expressHbs = require('express-handlebars');
+// const expressHbs = require('express-handlebars');
 
 const app = express();
-//handlebars templating engine 
-app.engine('hbs', expressHbs({
-    layoutsDir: 'views/layouts/',
-    defaultLayout: 'main-layout',
-    extname: 'hbs'
-}));
+// //handlebars templating engine 
+// app.engine('hbs', expressHbs({
+//     layoutsDir: 'views/layouts/',
+//     defaultLayout: 'main-layout',
+//     extname: 'hbs'
+// }));
 //set a global configuration value
-app.set('view engine', 'hbs');
+app.set('view engine', 'ejs');
 //this tells where to find these templates
 app.set('views', 'views');
 
