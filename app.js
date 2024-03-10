@@ -3,10 +3,13 @@ const path = require('path');
 
 const express = require('express');
 const bodyParser = require('body-parser');
+const expressHbs = require('express-handlebars');
 
 const app = express();
+//handlebars templating engine 
+app.engine('hbs', expressHbs());
 //set a global configuration value
-app.set('view engine', 'pug');
+app.set('view engine', 'hbs');
 //this tells where to find these templates
 app.set('views', 'views');
 
