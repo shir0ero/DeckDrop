@@ -21,9 +21,14 @@ const getProductsFromFile = (cb) => {
 const { stringify } = require('querystring');
 
 module.exports = class Product {
-    constructor(t) {
-        this.title = t;
+    constructor(title, imageUrl, description, price) {
+        this.title = title;
+        this.imageUrl = imageUrl;
+        this.description = description;
+        this.price = price;
     }
+
+    
     save() {
         // products.push(this);
         //we have to save thsi to a file rather than an array
