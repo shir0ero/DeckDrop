@@ -16,6 +16,15 @@ exports.getProducts = (req, res, next) => {
         });
     });
 };
+//responsible for getting a singl product by id
+exports.getProduct = (req, res, next) => {
+    //params extract the data which was accessed by the colon given in the route
+    const prodId = req.params.productId;
+    Product.findById(prodId, product => {
+        console.log(product);
+    })
+    res.redirect('/');
+};
 
 exports.getIndex = (req, res, next) => {
     Product.fetchAll(products => {
@@ -34,6 +43,13 @@ exports.getCart = (req, res, next) => {
     res.render('shop/cart', {
         path: '/cart',
         pageTitle: 'Your Cart'
+    });
+};
+
+exports.getOrders = (req, res, next) => {
+    res.render('shop/orders', {
+        path: '/orders',
+        pageTitle: 'Your Orders'
     });
 };
 

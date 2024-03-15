@@ -14,8 +14,13 @@ router.get('/', shopController.getIndex);
 
 //Add all the shop routes here and all the admin routes in admin.js router
 router.get('/products', shopController.getProducts);
+//keep the dynamic routes below the static routes 
+
+router.get('/products/:productId', shopController.getProduct);
 
 router.get('/cart', shopController.getCart);
+
+router.get('/orders', shopController.getOrders);
 
 router.get('/checkout', shopController.getCheckout);
 

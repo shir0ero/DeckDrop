@@ -21,15 +21,18 @@ const getProductsFromFile = (cb) => {
 const { stringify } = require('querystring');
 
 module.exports = class Product {
-    constructor(title, imageUrl, description, price) {
+    constructor(title, imageUrl, price, description) {
         this.title = title;
         this.imageUrl = imageUrl;
-        this.description = description;
         this.price = price;
+        this.description = description;
+
     }
 
-    
+
     save() {
+        //assigning id for my attributes
+        this.id = Math.random().toString();
         // products.push(this);
         //we have to save thsi to a file rather than an array
         getProductsFromFile(products => {
@@ -48,5 +51,14 @@ module.exports = class Product {
     static fetchAll(cb) {
         getProductsFromFile(cb);
     }
+    //
 
+    static findById(id, cb) {
+        getProductsFromFile(products => {
+            //products.find() will pass to find on every element in the array and return the found element
+            //cb is a callback to return the prodcut found
+            const product = products.find(p => p.id === id);
+            cb(product);
+        });
+    }
 }
