@@ -15,6 +15,7 @@ router.get('/products', adminController.getProducts);
 // /admin/add-product => POST
 router.post('/add-product', adminController.postAddProduct);
 //this is to export my products 
+router.get('/edit-product/:productId', adminController.getEditProduct);
 //since we have changed the routes we have to go the app.js to modify the code
 module.exports = router;
 

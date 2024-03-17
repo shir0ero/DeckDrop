@@ -19,10 +19,14 @@ form {
   display: inline;
 }
 
+.centered {
+  text-align: center;
+}
+
 .main-header {
   width: 100%;
   height: 3.5rem;
-  background-color: #4dbeeb;
+  background-color: rgb(58, 234, 247);
   padding: 0 1.5rem;
   display: flex;
   align-items: center;
@@ -64,10 +68,11 @@ form {
   position: fixed;
   left: 0;
   top: 0;
-  background: white;
+  background: url('https://img.freepik.com/premium-vector/pixel-art-starry-sky-during-sunset-moon-with-clouds-stars-vector-illustrations-eps10-bylayer_148553-721.jpg') center/cover no-repeat;
   z-index: 10;
   padding: 2rem 1rem 1rem 2rem;
   transform: translateX(-100%);
+  border-radius: 3%;
   transition: transform 0.3s ease-out;
 }
 
@@ -98,10 +103,11 @@ form {
 .mobile-nav__item a:active,
 .mobile-nav__item a:hover,
 .mobile-nav__item a.active {
-  background: #45e167;
+  background: #adbff1;
 
   color: white;
   border-radius: 3px;
+  transition: background-color 0.5s ease;
 }
 
 #side-menu-toggle {

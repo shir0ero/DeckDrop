@@ -41,10 +41,6 @@ module.exports = class Product {
                 console.log(err);
             });
         });
-        fs.readFile(p, (err, fileContent) => {
-
-            //stringify converts javascript object or array and convert it into JSON string
-        });
     }
     //static ensures we can only call this function only called ,not everytime Product is called
 
@@ -55,7 +51,7 @@ module.exports = class Product {
 
     static findById(id, cb) {
         getProductsFromFile(products => {
-            //products.find() will pass to find on every element in the array and return the found element
+            //products.find() will pass a functionto find on every element in the array and return the found element
             //cb is a callback to return the prodcut found
             const product = products.find(p => p.id === id);
             cb(product);

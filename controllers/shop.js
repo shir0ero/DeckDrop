@@ -1,29 +1,25 @@
 const Product = require('../models/product');
-
+const Cart = require('../models/cart');
 
 exports.getProducts = (req, res, next) => {
-    // res.send("<h1>I love pokemons</h1>"
-    const products = Product.fetchAll(products => {
-        res.render(
-            //here we assign the rendering template
-            'shop/product-list', {
+    Product.fetchAll(products => {
+        res.render('shop/product-list', {
             prods: products,
-            pageTitle: 'All products',
-            path: '/products',
-            'hasProducts': products.length > 0,
-            activeShop: true,
-            productCSS: true,
+            pageTitle: 'All Products',
+            path: '/products'
         });
     });
 };
-//responsible for getting a singl product by id
+
 exports.getProduct = (req, res, next) => {
-    //params extract the data which was accessed by the colon given in the route
     const prodId = req.params.productId;
     Product.findById(prodId, product => {
-        console.log(product);
-    })
-    res.redirect('/');
+        res.render('shop/product-detail', {
+            product: product,
+            pageTitle: product.title,
+            path: '/products'
+        });
+    });
 };
 
 exports.getIndex = (req, res, next) => {
@@ -31,19 +27,24 @@ exports.getIndex = (req, res, next) => {
         res.render('shop/index', {
             prods: products,
             pageTitle: 'Shop',
-            path: '/',
-            'hasProducts': products.length > 0,
-            activeShop: true,
-            productCSS: true,
+            path: '/'
         });
     });
-}
+};
 
 exports.getCart = (req, res, next) => {
     res.render('shop/cart', {
         path: '/cart',
         pageTitle: 'Your Cart'
     });
+};
+
+exports.postCart = (req, res, next) => {
+    const prodId = req.body.productId;
+    Product.findById(prodId, (product) => {
+        Cart.addProduct(prodId, product.price);
+    });
+    res.redirect('/cart');
 };
 
 exports.getOrders = (req, res, next) => {
