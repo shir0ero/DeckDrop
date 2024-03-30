@@ -15,7 +15,8 @@
     "express": "^4.18.3",
     "express-handlebars": "3.0",
     "mysql2": "^3.9.2",
-    "pug": "^3.0.2"
+    "pug": "^3.0.2",
+    "sequelize": "^6.37.1"
   },
   "devDependencies": {
     "@types/express-handlebars": "^6.0.0",
