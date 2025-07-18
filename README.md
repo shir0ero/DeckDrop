@@ -9,7 +9,6 @@
 ## Proposed Features
 1. Various microservices:
    - Authentication
-   - Payments handling with GPay
    - Shopping cart management
 2. Basic recommendation system for the user.
 3. Feedback via reviews.
@@ -20,7 +19,7 @@
 ## Tech Stacks
 1. **Client Side (Front-End):** HTML and Tailwind.
 2. **Server Side (Backend):** Node.js with Express.js, EJS.
-3. **Database Layer:** MongoDB.
+3. **Database Layer:** PostgreSQL.
 4. **Architecture:** MVC architecture.
 
 
