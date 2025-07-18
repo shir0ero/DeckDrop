@@ -1,25 +1,49 @@
-# Ecommerce Application
+# 🛒 Ecommerce Application
 
-## Team Name: Rayquaza
+## 🚀 Team Rayquaza
 
-## Team Members
+### 👥 Team Members
 - Ayush Raj ([GitHub](https://github.com/shir0ero))
 - Diwan Singh Dahiya ([GitHub](https://github.com/diwandahiya304))
 
-## Proposed Features
-1. Various microservices:
-   - Authentication
-   - Shopping cart management
-2. Basic recommendation system for the user.
-3. Feedback via reviews.
+---
 
-## Innovation
-- Adding an NLP model to evaluate the reviews given by the client and automatically grade the products.
+## 🌐 Live Demo
+🔗 [Click here to try the app](https://deckdrop-app.onrender.com)
 
-## Tech Stacks
-1. **Client Side (Front-End):** HTML and Tailwind.
-2. **Server Side (Backend):** Node.js with Express.js, EJS.
-3. **Database Layer:** PostgreSQL.
-4. **Architecture:** MVC architecture.
+---
+
+## 📌 Current Features
+
+- 🔐 **Authentication Service**
+  - User registration and login using secure JWT tokens.
+- 🛒 **Shopping Cart Management**
+  - Add/remove products and manage cart across sessions.
+- 🛍️ **Product Listings**
+  - View product catalogs pulled from the PostgreSQL database.
+
+---
+
+## 🚧 Planned Features
+
+- ✍️ **User Reviews**
+  - Allow customers to leave product feedback.
+- 🧠 **NLP-Based Review Analysis** *(Coming Soon)*
+  - Analyze user reviews for sentiment and auto-grade products.
+- 🎯 **Product Recommendations**
+  - Suggest similar or trending products based on user behavior.
+
+---
+
+## 🧱 Tech Stack
+
+| Layer            | Technology                 |
+|------------------|----------------------------|
+| 🖥️ Front-End     | HTML, Tailwind CSS, EJS     |
+| ⚙️ Back-End      | Node.js, Express.js         |
+| 🗃️ Database      | PostgreSQL                  |
+| 📐 Architecture  | Microservices (MVC Pattern) |
+
+---
 
 
