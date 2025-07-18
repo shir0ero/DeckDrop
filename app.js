@@ -57,7 +57,7 @@ Product.belongsToMany(Cart, { through: CartItem });
 //Calling sequilize
 //.sync({force : true}) ,here force is used to overwrite the table
 sequelize
-    .sync({ force: true })
+    .sync()
     .then(result => {
         return User.findByPk(1);
         // console.log(result);

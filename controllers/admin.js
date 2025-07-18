@@ -91,15 +91,19 @@ exports.getProducts = (req, res, next) => {
         .catch(err => { console.log(err) });
 };
 
+// In controllers/admin.js
 exports.postDeleteProduct = (req, res, next) => {
     const prodId = req.body.productId;
     Product.findByPk(prodId)
         .then(product => {
+            if (!product) {
+                return res.redirect('/admin/products');
+            }
             return product.destroy();
         })
         .then(result => {
-            console.log('DESTROYED PRODUCT!');
+            console.log('DESTROYED PRODUCT');
+            res.redirect('/admin/products'); // Correct position
         })
-        .catch(er => console.log(err));
-    res.redirect('/admin/products');
+        .catch(err => console.log(err)); // Also fixes the 'er' vs 'err' typo
 };
