@@ -1,109 +1,90 @@
+// controllers/admin.js
 const Product = require('../models/product');
 
 exports.getAddProduct = (req, res, next) => {
-    res.render('admin/edit-product', {
-        pageTitle: 'Add Product',
-        path: '/admin/add-product',
-        editing: false
-    });
+  res.render('admin/edit-product', {
+    pageTitle: 'Add Product',
+    path: '/admin/add-product',
+    editing: false,
+    isAuthenticated: req.session.isLoggedIn
+  });
 };
 
 exports.postAddProduct = (req, res, next) => {
-    const title = req.body.title;
-    const imageUrl = req.body.imageUrl;
-    const price = req.body.price;
-    const description = req.body.description;
-    req.user
-        .createProduct({
-            title: title,
-            price: price,
-            imageUrl: imageUrl,
-            description, description,
-        })
-        .then(result => {
-            console.log('Created Product');
-        })
-        .catch(err => {
-            console.log(err);
-        });
-
+  const { title, imageUrl, price, description } = req.body;
+  req.user
+    .createProduct({ title, price, imageUrl, description })
+    .then(result => {
+      console.log('Created Product');
+      res.redirect('/admin/products');
+    })
+    .catch(err => console.log(err));
 };
 
 exports.getEditProduct = (req, res, next) => {
-    const editMode = req.query.edit;
-    if (!editMode) {
+  const editMode = req.query.edit;
+  if (!editMode) {
+    return res.redirect('/');
+  }
+  const prodId = req.params.productId;
+  req.user
+    .getProducts({ where: { id: prodId } })
+    .then(products => {
+      const product = products[0];
+      if (!product) {
         return res.redirect('/');
-    }
-    const prodId = req.params.productId;
-    //Below command provides a structural approach for user-product relationship 
-    //use it instead of previous statement
-    req.user
-        .getProducts({ where: { id: prodId } })
-        // Product.findByPk(prodId)
-        .then(products => {
-            const product = products[0];
-            if (!product) {
-                return res.redirect('/');
-            }
-            res.render('admin/edit-product', {
-                pageTitle: 'Edit Product',
-                path: '/admin/edit-product',
-                editing: editMode,
-                product: product
-            });
-        })
-        .catch(err => console.log(err));
+      }
+      res.render('admin/edit-product', {
+        pageTitle: 'Edit Product',
+        path: '/admin/edit-product',
+        editing: editMode,
+        product: product,
+        isAuthenticated: req.session.isLoggedIn
+      });
+    })
+    .catch(err => console.log(err));
 };
 
 exports.postEditProduct = (req, res, next) => {
-    const prodId = req.body.productId;
-    const updatedTitle = req.body.title;
-    const updatedPrice = req.body.price;
-    const updatedImageUrl = req.body.imageUrl;
-    const updatedDesc = req.body.description;
-    Product.findByPk(prodId)
-        .then(product => {
-            product.title = updatedTitle;
-            product.price = updatedPrice;
-            product.description = updatedDesc;
-            product.imageUrl = updatedImageUrl;
-            return product.save();
-        })
-        .then(result => {
-            console.log('UPDATED PRODUCT')
-            res.redirect('/admin/products');
-        })
-        .catch(err => console.log(err));
-
+  const { productId, title, price, imageUrl, description } = req.body;
+  Product.findByPk(productId)
+    .then(product => {
+      if (product.userId.toString() !== req.user.id.toString()) {
+          return res.redirect('/'); // Authorization check
+      }
+      product.title = title;
+      product.price = price;
+      product.description = description;
+      product.imageUrl = imageUrl;
+      return product.save();
+    })
+    .then(result => {
+      console.log('UPDATED PRODUCT!');
+      res.redirect('/admin/products');
+    })
+    .catch(err => console.log(err));
 };
 
 exports.getProducts = (req, res, next) => {
-    //the next set of commands will return the product for the given user
-    req.user
-        .getProducts()
-        .then(products => {
-            res.render('admin/products', {
-                prods: products,
-                pageTitle: 'Admin Products',
-                path: '/admin/products'
-            });
-        })
-        .catch(err => { console.log(err) });
+  req.user
+    .getProducts()
+    .then(products => {
+      res.render('admin/products', {
+        prods: products,
+        pageTitle: 'Admin Products',
+        path: '/admin/products',
+        isAuthenticated: req.session.isLoggedIn
+      });
+    })
+    .catch(err => console.log(err));
 };
 
-// In controllers/admin.js
 exports.postDeleteProduct = (req, res, next) => {
-    const prodId = req.body.productId;
-    Product.findByPk(prodId)
-        .then(product => {
-            if (!product) {
-                return res.redirect('/admin/products');
-            }
-            return product.destroy();
-        })
-        .then(result => {
-            console.log('DESTROYED PRODUCT');
-            res.redirect('/admin/products'); // Correct position
-        })
-        .catch(err => console.log(err)); // Also fixes the 'er' vs 'err' typo
+  const prodId = req.body.productId;
+  Product.destroy({ where: { id: prodId, userId: req.user.id }})
+    .then(() => {
+      console.log('DESTROYED PRODUCT');
+      res.redirect('/admin/products');
+    })
+    .catch(err => console.log(err));
 };

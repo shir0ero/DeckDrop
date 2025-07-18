@@ -15,6 +15,7 @@
     border: 1px solid #a1a1a1;
     font: inherit;
     border-radius: 2px;
+    padding: 0.5rem;
 }
 
 .form-control input:focus,

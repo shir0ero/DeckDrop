@@ -1,85 +1,105 @@
-//path is a inbuilt NodeJS module
-//This module provides utilities for working with file and directory paths
+// Core Node.js Modules
 const path = require('path');
 
+// 3rd-Party Packages
 const express = require('express');
 const bodyParser = require('body-parser');
-// const expressHbs = require('express-handlebars');
+const session = require('express-session');
+const SequelizeStore = require('connect-session-sequelize')(session.Store);
+require('dotenv').config(); // Loads environment variables from a .env file
 
+// Local/Custom Imports
 const errorController = require('./controllers/error.js');
 const sequelize = require('./util/database');
+
+// Sequelize Models
 const Product = require('./models/product');
 const User = require('./models/user');
 const Cart = require('./models/cart');
 const CartItem = require('./models/cart-item');
-const app = express();
-// //handlebars templating engine 
-// app.engine('hbs', expressHbs({
-//     layoutsDir: 'views/layouts/',
-//     defaultLayout: 'main-layout',
-//     extname: 'hbs'
-// }));
-//set a global configuration value
-app.set('view engine', 'ejs');
-//this tells where to find these templates
-app.set('views', 'views');
+const Order = require('./models/order');
+const OrderItem = require('./models/order-item');
 
+// Route Imports
 const adminRoutes = require('./routes/admin.js');
 const shopRoutes = require('./routes/shop.js');
+const authRoutes = require('./routes/auth.js');
 
+// Initialize Express App
+const app = express();
+
+// Initialize Sequelize Session Store
+const sessionStore = new SequelizeStore({
+    db: sequelize,
+});
+
+// Set up EJS as the view engine
+app.set('view engine', 'ejs');
+app.set('views', 'views');
+
+// --- Middleware Pipeline ---
+
+// 1. Body Parser for parsing form data
 app.use(bodyParser.urlencoded({ extended: false }));
-//this is used to make the public folder accessable
+
+// 2. Serve static files (e.g., CSS) from the 'public' directory
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use((req, res, next) => {
-    User.findByPk(1)
-        .then(user => {
-            req.user = user;
-            next();
-        })
-        .catch(err => console.log(err));
-})
+// 3. Session configuration
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET || 'fallback-secret',
+    store: sessionStore,
+    resave: false,
+    saveUninitialized: false,
+  })
+);
 
+// 4. Custom middleware to attach the user object to the request
+app.use((req, res, next) => {
+  if (!req.session.user) {
+    return next();
+  }
+  User.findByPk(req.session.user.id)
+    .then(user => {
+      if (user) {
+        req.user = user;
+      }
+      next();
+    })
+    .catch(err => {
+      console.log(err);
+      next(new Error(err));
+    });
+});
+
+// --- Route Handlers ---
 app.use('/admin', adminRoutes);
 app.use(shopRoutes);
+app.use(authRoutes);
 
+// --- Error Handling ---
 app.use(errorController.get404);
 
+// --- Sequelize Model Associations ---
 Product.belongsTo(User, { constraints: true, onDelete: 'CASCADE' });
-//Cool part
 User.hasMany(Product);
 User.hasOne(Cart);
-//cart belongs to a user
 Cart.belongsTo(User);
 Cart.belongsToMany(Product, { through: CartItem });
 Product.belongsToMany(Cart, { through: CartItem });
+Order.belongsTo(User);
+User.hasMany(Order);
+Order.belongsToMany(Product, { through: OrderItem });
 
-//Calling sequilize
-//.sync({force : true}) ,here force is used to overwrite the table
+// --- Database Sync and Server Start ---
 sequelize
     .sync()
     .then(result => {
-        return User.findByPk(1);
-        // console.log(result);
-
-    })
-    .then(user => {
-        if (!user) {
-            //if you dont have user create one
-            return User.create({ name: 'RITURAJ', email: 'rituraj@test.com' });
-        }
-        return user;
-    })
-    .then(user => {
-        // console.log(user)
-        return user.createCart();
-    })
-    .then(cart => {
-        app.listen(3000);
+        app.listen(3000, () => {
+            console.log('Server is running on port 3000');
+        });
     })
     .catch(err => {
-        console.log(err);
+        console.log('Error during database sync:', err);
     });
-
-
-
