@@ -101,35 +101,15 @@ Order.belongsTo(User);
 User.hasMany(Order);
 Order.belongsToMany(Product, { through: OrderItem });
 
-const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
-
-const startServer = async () => {
-  const maxDbAttempts = Number(process.env.DB_CONNECT_RETRIES || 5);
-  const retryDelayMs = Number(process.env.DB_CONNECT_RETRY_DELAY_MS || 3000);
-
-  for (let attempt = 1; attempt <= maxDbAttempts; attempt += 1) {
-    try {
-      await sequelize.authenticate();
-      console.log('Database connection established successfully.');
-      break;
-    } catch (err) {
-      console.error(`Database connection attempt ${attempt}/${maxDbAttempts} failed:`, err.message);
-      if (attempt === maxDbAttempts) {
-        throw err;
-      }
-      await wait(retryDelayMs);
-    }
-  }
-
-  await sequelize.sync();
-  await sessionStore.sync();
-
-  app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
+// --- Database Sync and Server Start ---
+sequelize
+  .sync()
+  .then(() => sessionStore.sync())
+  .then(() => {
+    app.listen(port, () => {
+      console.log(`Server is running on port ${port}`);
+    });
+  })
+  .catch(err => {
+    console.log('Error during database sync:', err);
   });
-};
-
-startServer().catch(err => {
-  console.error('Error during app startup:', err);
-  process.exit(1);
-});
