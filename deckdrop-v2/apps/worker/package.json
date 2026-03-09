@@ -1,0 +1,13 @@
+{
+  "name": "@deckdrop/worker",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "node src/index.js",
+    "start": "node src/index.js",
+    "test": "echo 'tests not added yet'"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5"
+  }
+}
